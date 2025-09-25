@@ -1,0 +1,52 @@
+{
+  "name": "nested-filter-engine",
+  "version": "1.0.0",
+  "description": "This application is a backend service built with Node.js that provides a flexible and reusable way to apply complex filters to datasets.",
+  "main": "dist/server.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.16.2",
+    "acorn": "^8.15.0",
+    "acorn-walk": "^8.3.4",
+    "arg": "^4.1.3",
+    "create-require": "^1.1.1",
+    "diff": "^4.0.2",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "install": "^0.13.0",
+    "make-error": "^1.3.6",
+    "prisma": "^6.16.2",
+    "undici-types": "^7.12.0",
+    "v8-compile-cache-lib": "^3.0.1",
+    "yn": "^3.1.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.5.2",
+    "concurrently": "^9.2.1",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.2"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon dist/server.js\"",
+    "start": "node ./dist/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jacekroszkowiakdev/nested-filter-engine.git"
+  },
+  "keywords": [],
+  "author": "Jacek Roszkowiak <jacekroszkowiakdev@gmail.com>",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/jacekroszkowiakdev/nested-filter-engine/issues"
+  },
+  "homepage": "https://github.com/jacekroszkowiakdev/nested-filter-engine#readme"
+}
