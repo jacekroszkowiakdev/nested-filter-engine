@@ -16,3 +16,6 @@ src/generated/prisma/
 
 # TypeScript cache
 *.tsbuildinfo
+
+# Docker
+Dockerfile
