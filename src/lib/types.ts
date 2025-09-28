@@ -31,4 +31,6 @@ export type FilterFieldMetadata = {
   enumValues?: string[];
 };
 
+export type Role = 'USER' | 'ADMIN' | 'MODERATOR';
+
 

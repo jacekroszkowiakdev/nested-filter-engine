@@ -1,4 +1,4 @@
-import { FieldDefinition, FilterSchema, FilterFieldMetadata } from "../lib/types";
+import { FieldDefinition, FilterSchema, FilterFieldMetadata } from "../lib/types.js";
 import { FILTER_FIELDS_METADATA } from "./metadata.js";
 
 
