@@ -9,7 +9,7 @@ export class UserFilter {
   @Filterable(['eq', 'contains'], 'string')
   email!: string;
 
-  @Filterable(['gt', 'lt', 'between'], 'number')
+  @Filterable(['eq', 'neq', 'gt', 'lt', 'gte', 'lte', 'between'], 'number')
   age!: number;
 
   @Filterable(['eq', 'neq'], 'string')
