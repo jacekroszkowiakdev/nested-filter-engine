@@ -17,16 +17,16 @@ export class UserController {
 
 
             if (req.method === 'GET') {
-                const filterParams = req.query.filter;
+                const filterParam = req.query.filter;
 
-                if (!filterParams) {
+                if (!filterParam) {
                     // No filter = return all results
                 const allUsers = await UserService.getAllUsers();
                 return res.status(200).json(allUsers);
                 }
 
                 try {
-                    filters = JSON.parse(filterParams as string);
+                    filters = JSON.parse(filterParam as string);
                 } catch {
                     return res.status(400).json({ error: 'Invalid filter JSON in query param' });
                 }
@@ -35,7 +35,7 @@ export class UserController {
             }
 
             validator.validate(filters);
-            const filteredResult = await UserService.filterUsers(req.body);
+            const filteredResult = await UserService.filterUsers(filters);
 
             res.status(200).json(filteredResult);
         } catch (error) {
