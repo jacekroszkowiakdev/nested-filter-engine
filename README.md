@@ -294,6 +294,7 @@ curl -X POST http://localhost:3000/api/users/filter \
 ```
 
 **Response:**
+
 ```json
 {
   "error": "Filter validation failed",
@@ -314,6 +315,7 @@ curl -X POST http://localhost:3000/api/users/filter \
 ```
 
 **Response:**
+
 ```json
 {
   "error": "Filter validation failed",
@@ -334,6 +336,7 @@ curl -X POST http://localhost:3000/api/users/filter \
 ```
 
 **Response:**
+
 ```json
 {
   "error": "Filter validation failed",
@@ -354,6 +357,7 @@ curl -X POST http://localhost:3000/api/users/filter \
 ```
 
 **Response:**
+
 ```json
 {
   "error": "Filter validation failed",
@@ -374,6 +378,7 @@ curl -X POST http://localhost:3000/api/users/filter \
 ```
 
 **Response:**
+
 ```json
 {
   "error": "Filter validation failed",
@@ -394,6 +399,7 @@ curl -X POST http://localhost:3000/api/users/filter \
 ```
 
 **Response:**
+
 ```json
 {
   "error": "Filter validation failed",
@@ -412,6 +418,7 @@ curl -X POST http://localhost:3000/api/users/filter \
 ```
 
 **Response:**
+
 ```json
 {
   "error": "Filter validation failed",
@@ -516,4 +523,4 @@ ISC
 
 ## Author
 
-Jacek Roszkowiak - jacekroszkowiakdev@gmail.com
+Jacek Roszkowiak - [jacekroszkowiakdev@gmail.com](mailto:jacekroszkowiakdev@gmail.com)
