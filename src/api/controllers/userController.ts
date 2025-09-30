@@ -12,10 +12,31 @@ const validator = new Validator(schema);
 export class UserController {
     static async filterUsers(req: Request, res: Response) {
         try {
-            const filters = req.body;
-            validator.validate(filters);
+            let filters;
 
+
+
+            if (req.method === 'GET') {
+                const filterParams = req.query.filter;
+
+                if (!filterParams) {
+                    // No filter = return all results
+                const allUsers = await UserService.getAllUsers();
+                return res.status(200).json(allUsers);
+                }
+
+                try {
+                    filters = JSON.parse(filterParams as string);
+                } catch {
+                    return res.status(400).json({ error: 'Invalid filter JSON in query param' });
+                }
+            } else {
+                filters = req.body;
+            }
+
+            validator.validate(filters);
             const filteredResult = await UserService.filterUsers(req.body);
+
             res.status(200).json(filteredResult);
         } catch (error) {
             console.error('[UserController] filterUsers error:', error);
@@ -27,5 +48,6 @@ export class UserController {
 }
 
 router.post('/users/filter', UserController.filterUsers);
+router.get("/users/filter", UserController.filterUsers);
 
 export default router;

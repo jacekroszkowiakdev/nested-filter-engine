@@ -11,7 +11,13 @@ export class UserService {
     // Execute query with Prisma
     return prisma.user.findMany({
       where: prismaQuery,
-      orderBy: { createdAt: "desc" }, // optional: consistent ordering
+      orderBy: { createdAt: "desc" },
+    });
+  }
+
+  static async getAllUsers() {
+    return prisma.user.findMany({
+      orderBy: { createdAt: "desc" },
     });
   }
 }
