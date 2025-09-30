@@ -14,13 +14,11 @@ export class UserController {
         try {
             let filters;
 
-
-
             if (req.method === 'GET') {
                 const filterParam = req.query.filter;
 
                 if (!filterParam) {
-                    // No filter = return all results
+                // No filter = return all results
                 const allUsers = await UserService.getAllUsers();
                 return res.status(200).json(allUsers);
                 }
@@ -31,7 +29,19 @@ export class UserController {
                     return res.status(400).json({ error: 'Invalid filter JSON in query param' });
                 }
             } else {
+                // POST method
                 filters = req.body;
+            }
+
+            // POST check if filters obj is empty
+            if (!filters || Object.keys(filters).length === 0) {
+                const allUsers = await UserService.getAllUsers();
+                return res.status(200).json(allUsers);
+            }
+
+            // Validate filter structure
+            if (typeof filters !== "object" || Array.isArray(filters)) {
+                return res.status(400).json({ error: "Invalid filter JSON structure" });
             }
 
             validator.validate(filters);
