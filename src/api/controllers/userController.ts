@@ -9,6 +9,8 @@ const router = Router();
 const schema = generateFilterSchema(UserFilter);
 const validator = new Validator(schema);
 
+console.log('Generated schema:', JSON.stringify(schema, null, 2));
+
 export class UserController {
     static async filterUsers(req: Request, res: Response) {
         try {
@@ -52,7 +54,7 @@ export class UserController {
             console.error('[UserController] filterUsers error:', error);
 
             const errorMessage = (error instanceof Error) ? error.message : String(error);
-            res.status(400).json({ error: 'Internal Server Error', details: errorMessage });
+            res.status(400).json({ error: 'Filter validation failed', details: errorMessage });
         }
     }
 }

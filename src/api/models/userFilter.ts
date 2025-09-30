@@ -15,8 +15,8 @@ export class UserFilter {
   @Filterable(['eq', 'neq', 'gt', 'lt', 'gte', 'lte', 'between', 'in', 'is_null', 'is_not_null'], 'number')
   age!: number;
 
-  @Filterable(['eq', 'neq', 'in', 'is_null', 'is_not_null'], 'string')
-  role!: Role;
+  @Filterable(['eq', 'neq', 'in', 'is_null', 'is_not_null'], 'string', ['USER', 'ADMIN', 'MODERATOR'])
+  role!: string;
 
   @Filterable(['eq', 'neq', 'is_null', 'is_not_null'], 'boolean')
   isActive!: boolean;

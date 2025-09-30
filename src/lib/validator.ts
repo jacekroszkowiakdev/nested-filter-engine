@@ -18,8 +18,8 @@ export class Validator {
 
   private validateCondition(condition: FilterCondition): void {
     const { field, operator, value } = condition;
-
     const fieldDef = this.schema[field];
+
     if (!fieldDef || !fieldDef.filterable) {
       throw new Error(`Field '${field}' is not filterable`);
     }
@@ -38,6 +38,14 @@ export class Validator {
             `Operator 'between' requires exactly two values for field '${field}'`
           );
         }
+        // Validate each value in the between array
+        this.validateType(fieldDef, value[0], field);
+        this.validateType(fieldDef, value[1], field);
+        // Validate enum values if applicable
+        if (fieldDef.enumValues) {
+          this.validateEnumValue(fieldDef, value[0], field);
+          this.validateEnumValue(fieldDef, value[1], field);
+        }
         break;
 
       case "in":
@@ -46,6 +54,12 @@ export class Validator {
             `Operator 'in' requires an array value for field '${field}'`
           );
         }
+        value.forEach((v) => {
+          this.validateType(fieldDef, v, field);
+          if (fieldDef.enumValues) {
+            this.validateEnumValue(fieldDef, v, field);
+          }
+        });
         break;
 
       case "is_null":
@@ -59,6 +73,9 @@ export class Validator {
 
       default:
         this.validateType(fieldDef, value, field);
+        if (fieldDef.enumValues && value !== null && value !== undefined) {
+          this.validateEnumValue(fieldDef, value, field);
+        }
     }
   }
 
@@ -70,18 +87,22 @@ export class Validator {
         if (typeof value !== "string")
           throw new Error(`Field '${field}' must be a string`);
         break;
+
       case "number":
         if (typeof value !== "number")
           throw new Error(`Field '${field}' must be a number`);
         break;
+
       case "boolean":
         if (typeof value !== "boolean")
           throw new Error(`Field '${field}' must be a boolean`);
         break;
+
       case "date":
         if (isNaN(Date.parse(value)))
           throw new Error(`Field '${field}' must be a valid date string`);
         break;
+
       case "uuid":
         if (
           typeof value !== "string" ||
@@ -92,13 +113,17 @@ export class Validator {
           throw new Error(`Field '${field}' must be a valid UUID`);
         }
         break;
-      case "enum":
-        if (!fieldDef.enumValues?.includes(value)) {
-          throw new Error(
-            `Field '${field}' must be one of: ${fieldDef.enumValues?.join(", ")}`
-          );
-        }
-        break;
+    }
+  }
+
+  private validateEnumValue(fieldDef: FieldDefinition, value: any, field: string): void {
+    if (!fieldDef.enumValues || value === null || value === undefined) return;
+
+    if (!fieldDef.enumValues.includes(value)) {
+      throw new Error(
+        `Invalid value '${value}' for field '${field}'. ` +
+        `Allowed values: ${fieldDef.enumValues.join(', ')}`
+      );
     }
   }
 }
