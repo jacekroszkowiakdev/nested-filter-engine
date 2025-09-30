@@ -1,6 +1,4 @@
 import { Filterable } from '../../decorators/filterable.js';
-import { Role } from '../../lib/types.js';
-
 
 export class UserFilter {
   @Filterable(['eq', 'neq', 'in', 'is_null', 'is_not_null'], 'uuid')
@@ -21,13 +19,10 @@ export class UserFilter {
   @Filterable(['eq', 'neq', 'is_null', 'is_not_null'], 'boolean')
   isActive!: boolean;
 
-  @Filterable(['eq', 'neq', 'gt', 'lt', 'gte', 'lte', 'between', 'is_null', 'is_not_null'], 'date')
   createdAt!: Date;
 
-  @Filterable(['eq', 'neq', 'gt', 'lt', 'gte', 'lte', 'between', 'is_null', 'is_not_null'], 'date')
   joinDate!: Date;
 
-  @Filterable(['eq', 'neq', 'gt', 'lt', 'gte', 'lte', 'between', 'is_null', 'is_not_null'], 'date')
   updatedAt!: Date;
 
   constructor(data: Partial<UserFilter> = {}) {
