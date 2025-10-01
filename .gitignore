@@ -19,3 +19,8 @@ src/generated/prisma/
 
 # Docker
 Dockerfile
+
+# Coverage reports
+coverage/
+*.lcov
+.nyc_output/
