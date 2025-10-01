@@ -7,10 +7,10 @@ export default defineConfig({
       thresholds: {
         lines: 80,
         functions: 80,
-        branches: 55,
+        branches: 80,
         statements: 80,
       },
-      reporter: ["text", "lcov", "html"],   // ✅ text summary in console + lcov for CI tools (e.g. Codecov)
+      reporter: ["text", "lcov", "html"],
       exclude: [
         "node_modules/",
         "dist/",

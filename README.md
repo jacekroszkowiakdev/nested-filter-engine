@@ -81,6 +81,82 @@ This application provides a reusable filter library that accepts complex nested 
 └── tsconfig.json                      # TypeScript configuration
 ```
 
+---
+
+## Testing
+
+### Test Suite
+
+Comprehensive test coverage with Vitest:
+
+- **Unit Tests**: 30+ tests covering validator and query converter logic
+- **Integration Tests**: 9 tests for API endpoints with real database queries
+- **Coverage**: 80%+ threshold enforced for lines, functions, and statements
+
+### Test Structure
+
+```zsh
+test/
+├── unit/
+│   ├── validator.test.ts          # 21 tests - field access, operators, types, nested groups
+│   └── queryConverter.test.ts     # 10 tests - operator conversion, nested filters
+└── integration/
+    └── userFilter.test.ts         # 9 tests - GET/POST endpoints, validation errors
+
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run with coverage report
+npm run test:coverage
+
+# Watch mode for development
+npm run test:watch
+
+# Run specific test file
+npm test validator.test.ts
+```
+
+### Test Coverage Areas
+
+#### Validator Tests
+
+- Field access control (filterable vs non-filterable)
+- Operator validation per field type
+- Type validation (string, number, boolean, UUID, enum)
+- Special operator rules (`between`, `in`, `is_null`, `is_not_null`)
+- Nested AND/OR filter groups
+
+#### Query Converter Tests
+
+- All 13 operator conversions
+- String operations (contains, starts_with, ends_with)
+- Comparison operators (eq, neq, gt, gte, lt, lte)
+- Collection operators (in, between)
+- Null checks (is_null, is_not_null)
+- Complex nested AND/OR groups
+
+#### Integration Tests
+
+- POST endpoint with valid/invalid filters
+- GET endpoint with URL-encoded filters
+- Error handling and validation messages
+- Query execution against seeded database
+- Edge cases (empty filters, invalid JSON)
+
+### Coverage Thresholds
+
+Configured in `vitest.config.ts`:
+
+- Lines: 80%
+- Functions: 80%
+- Statements: 80%
+- Branches: 80%
+
 ## Setup Instructions
 
 ### Prerequisites
@@ -504,15 +580,15 @@ Audit fields (`createdAt`, `updatedAt`, `joinDate`) are intentionally not decora
 ## Known Limitations
 
 1. **Extensibility**: Custom operators and pluggable query builders not yet implemented
-2. **Testing**: Unit and integration tests pending
-3. **Query Builders**: Only Prisma supported currently
-4. **Performance**: No query optimization or caching implemented
+2. **Query Builders**: Only Prisma supported currently
+3. **Performance**: No query optimization or caching implemented
 
 ## Future Enhancements
 
 - [ ] Custom operator registration system
 - [ ] Pluggable query builder interface (TypeORM, Sequelize support)
-- [ ] Comprehensive test suite
+- [x] Comprehensive test suite (completed)
+- [ ] E2E tests
 - [ ] Query result pagination
 - [ ] Filter result caching
 - [ ] OpenAPI documentation
