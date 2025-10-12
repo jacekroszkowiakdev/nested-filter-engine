@@ -4,15 +4,19 @@ type PrismaQuery = Record<string, any>;
 
 export class QueryConverter {
     static convert(filter: FilterGroup | FilterCondition): PrismaQuery {
+        // Identify if it's a condition or a group
         if ('field' in filter && 'operator' in filter) {
             return this.convertCondition(filter);
         }
 
+        // create PrismaQuery for groups
         const groupQuery: PrismaQuery = {};
 
+        // build{ AND: [...] }
         if (filter.and) {
             groupQuery.AND = filter.and.map(subFilter => this.convert(subFilter));
         }
+        // build { OR: [...] }
         if (filter.or) {
             groupQuery.OR = filter.or.map(subFilter => this.convert(subFilter));
         }
@@ -20,6 +24,7 @@ export class QueryConverter {
         return groupQuery;
     }
 
+    // map each operator to Prisma's syntax:
     private static convertCondition(condition: FilterCondition): PrismaQuery {
         const  { field, operator, value } = condition;
 

@@ -8,6 +8,7 @@ export function Filterable(
   enumValues?: string[]
 ) {
   return (target: any, propertyKey: string) => {
+    // Read metadata for the class (constructor function)
     const existingMetadata: Record<string, FilterFieldMetadata> =
       Reflect.getMetadata(FILTER_FIELDS_METADATA, target.constructor) || {};
 

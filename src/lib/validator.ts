@@ -7,6 +7,10 @@ export class Validator {
     this.schema = schema;
   }
 
+  // When a filter request comes in, the Validator uses this schema to check
+  // 1. Does schema[fieldName] exist? If not, the field isn't filterable
+  // 2. Is the requested operator in the allowed operators array?
+  // 3. Does the value match the field's type?
   validate(filter: FilterGroup | FilterCondition): void {
     if ("field" in filter && "operator" in filter) {
       this.validateCondition(filter);
@@ -20,6 +24,7 @@ export class Validator {
     const { field, operator, value } = condition;
     const fieldDef = this.schema[field];
 
+    // check if field is filterable and defined in schema
     if (!fieldDef || !fieldDef.filterable) {
       throw new Error(`Field '${field}' is not filterable`);
     }
@@ -32,6 +37,7 @@ export class Validator {
 
     // special rules
     switch (operator) {
+      // between must have exactly 2 values in an array
       case "between":
         if (!Array.isArray(value) || value.length !== 2) {
           throw new Error(
@@ -48,6 +54,7 @@ export class Validator {
         }
         break;
 
+      // in must have an array value
       case "in":
         if (!Array.isArray(value)) {
           throw new Error(
@@ -62,6 +69,8 @@ export class Validator {
         });
         break;
 
+
+      // is_null and is_not_null must not have a value
       case "is_null":
       case "is_not_null":
         if (value !== undefined) {
@@ -119,6 +128,7 @@ export class Validator {
   private validateEnumValue(fieldDef: FieldDefinition, value: any, field: string): void {
     if (!fieldDef.enumValues || value === null || value === undefined) return;
 
+    // If the field has enumValues (like role having ['USER', 'ADMIN', 'MODERATOR']), check if the provided value is in that list
     if (!fieldDef.enumValues.includes(value)) {
       throw new Error(
         `Invalid value '${value}' for field '${field}'. ` +

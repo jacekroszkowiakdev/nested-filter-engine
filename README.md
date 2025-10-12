@@ -11,18 +11,21 @@ This application provides a reusable filter library that accepts complex nested 
 ### Core Features Implemented
 
 1. **Reusable Filter Library**
+
    - TypeScript decorators (`@Filterable`) for field-level access control
    - Schema generation from decorated classes
    - Comprehensive validation engine
    - Query converter for Prisma ORM
 
 2. **Filter Operators** (13 total)
+
    - Comparison: `eq`, `neq`, `gt`, `gte`, `lt`, `lte`
    - Range: `between`, `in`
    - String: `contains`, `starts_with`, `ends_with`
    - Null checks: `is_null`, `is_not_null`
 
 3. **Validation System**
+
    - Field filterability checks
    - Operator allowance per field type
    - Type validation (string, number, boolean, date, uuid, enum)
@@ -30,6 +33,7 @@ This application provides a reusable filter library that accepts complex nested 
    - Enum value validation
 
 4. **API Endpoints**
+
    - `POST /api/users/filter` - JSON body filters
    - `GET /api/users/filter` - URL-encoded query string filters
    - Comprehensive error handling with descriptive messages
@@ -490,7 +494,7 @@ curl -X POST http://localhost:3000/api/users/filter \
 -H "Content-Type: application/json" \
 -d '{
   "invalid": "structure"
-}' | jq
+}'
 ```
 
 **Response:**
@@ -526,22 +530,28 @@ Use `@Filterable` decorator to mark fields as filterable:
 
 ```typescript
 export class UserFilter {
-  @Filterable(['eq', 'neq', 'in', 'is_null', 'is_not_null'], 'uuid')
+  @Filterable(["eq", "neq", "in", "is_null", "is_not_null"], "uuid")
   id!: string;
 
-  @Filterable(['eq', 'neq', 'contains', 'starts_with', 'ends_with', 'in'], 'string')
+  @Filterable(
+    ["eq", "neq", "contains", "starts_with", "ends_with", "in"],
+    "string"
+  )
   email!: string;
 
-  @Filterable(['eq', 'neq', 'contains', 'starts_with', 'ends_with'], 'string')
+  @Filterable(["eq", "neq", "contains", "starts_with", "ends_with"], "string")
   name!: string;
 
-  @Filterable(['eq', 'neq', 'gt', 'lt', 'gte', 'lte', 'between', 'in'], 'number')
+  @Filterable(
+    ["eq", "neq", "gt", "lt", "gte", "lte", "between", "in"],
+    "number"
+  )
   age!: number;
 
-  @Filterable(['eq', 'neq', 'in'], 'string', ['USER', 'ADMIN', 'MODERATOR'])
+  @Filterable(["eq", "neq", "in"], "string", ["USER", "ADMIN", "MODERATOR"])
   role!: string;
 
-  @Filterable(['eq', 'neq'], 'boolean')
+  @Filterable(["eq", "neq"], "boolean")
   isActive!: boolean;
 
   // Non-filterable system fields
