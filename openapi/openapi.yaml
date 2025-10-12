@@ -1,0 +1,288 @@
+openapi: 3.1.0
+info:
+  title: Filter API
+  version: 1.0.0
+  description: Reusable filter library with complex nested queries for Node.js/Prisma
+  x-logo:
+    url: https://your-domain.com/logo.png
+    altText: Filter API Logo
+
+servers:
+  - url: http://localhost:3000
+    description: Development server
+
+# Redoc configuration
+x-redoc-config:
+  theme:
+    colors:
+      primary:
+        main: "#6366f1"
+    typography:
+      fontSize: 15px
+      fontFamily: '"Inter", sans-serif'
+      headings:
+        fontWeight: "600"
+  openapi:
+    disableSearch: false
+    expandResponses: "200,201"
+    jsonSamplesExpandLevel: 2
+
+tags:
+  - name: Users
+    description: User filtering endpoints
+
+paths:
+  /api/users/filter:
+    post:
+      tags: [Users]
+      summary: Filter users with complex queries
+      description: |
+        Apply advanced filtering with nested AND/OR conditions.
+
+        **Supported Operators:**
+        - **Comparison**: `eq`, `neq`, `gt`, `gte`, `lt`, `lte`
+        - **Range**: `between`, `in`
+        - **String**: `contains`, `starts_with`, `ends_with`
+        - **Null checks**: `is_null`, `is_not_null`
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: "#/components/schemas/FilterCondition"
+                - $ref: "#/components/schemas/FilterGroup"
+            examples:
+              simpleEquality:
+                summary: Simple equality filter
+                value:
+                  field: email
+                  operator: eq
+                  value: john@example.com
+
+              andCondition:
+                summary: AND filter (Admin and Active)
+                value:
+                  and:
+                    - field: role
+                      operator: eq
+                      value: ADMIN
+                    - field: isActive
+                      operator: eq
+                      value: true
+
+              orCondition:
+                summary: OR filter (Admin or Moderator)
+                value:
+                  or:
+                    - field: role
+                      operator: eq
+                      value: ADMIN
+                    - field: role
+                      operator: eq
+                      value: MODERATOR
+
+              nestedCondition:
+                summary: Complex nested filter
+                value:
+                  and:
+                    - field: isActive
+                      operator: eq
+                      value: true
+                    - or:
+                        - field: role
+                          operator: eq
+                          value: ADMIN
+                        - and:
+                            - field: age
+                              operator: gte
+                              value: 18
+                            - field: email
+                              operator: ends_with
+                              value: "@company.com"
+
+              stringOperators:
+                summary: String operators
+                value:
+                  and:
+                    - field: email
+                      operator: contains
+                      value: "@gmail.com"
+                    - field: name
+                      operator: starts_with
+                      value: John
+
+              rangeOperators:
+                summary: Range operators
+                value:
+                  and:
+                    - field: age
+                      operator: between
+                      value: [18, 65]
+                    - field: role
+                      operator: in
+                      value: ["ADMIN", "MODERATOR"]
+
+      responses:
+        "200":
+          description: Successfully filtered users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                notFilterable:
+                  summary: Field not filterable
+                  value:
+                    error: "Field 'password' is not filterable"
+                operatorNotAllowed:
+                  summary: Operator not allowed
+                  value:
+                    error: "Operator 'contains' is not allowed for field 'age'"
+                invalidValue:
+                  summary: Invalid value type
+                  value:
+                    error: "Invalid value for field 'age'. Expected: number"
+
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    get:
+      tags: [Users]
+      summary: Filter users with query parameters
+      description: Apply filters using URL-encoded query string
+
+      parameters:
+        - name: filter
+          in: query
+          required: true
+          schema:
+            type: string
+          description: URL-encoded JSON filter object
+          examples:
+            simple:
+              summary: Simple filter
+              value: '{"field":"email","operator":"eq","value":"john@example.com"}'
+            complex:
+              summary: Complex filter
+              value: '{"and":[{"field":"role","operator":"eq","value":"ADMIN"},{"field":"isActive","operator":"eq","value":true}]}'
+
+      responses:
+        "200":
+          description: Successfully filtered users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        age:
+          type: integer
+        role:
+          type: string
+          enum: [USER, ADMIN, MODERATOR]
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    FilterCondition:
+      type: object
+      required: [field, operator]
+      properties:
+        field:
+          type: string
+          description: The field name to filter on
+          example: email
+        operator:
+          type: string
+          enum:
+            [
+              eq,
+              neq,
+              gt,
+              gte,
+              lt,
+              lte,
+              between,
+              in,
+              contains,
+              starts_with,
+              ends_with,
+              is_null,
+              is_not_null,
+            ]
+          description: The comparison operator
+          example: eq
+        value:
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+            - type: array
+              items: {}
+          description: The value to compare against (not needed for is_null/is_not_null)
+          example: john@example.com
+
+    FilterGroup:
+      type: object
+      properties:
+        and:
+          type: array
+          description: All conditions must be true
+          items:
+            oneOf:
+              - $ref: "#/components/schemas/FilterCondition"
+              - $ref: "#/components/schemas/FilterGroup"
+        or:
+          type: array
+          description: At least one condition must be true
+          items:
+            oneOf:
+              - $ref: "#/components/schemas/FilterCondition"
+              - $ref: "#/components/schemas/FilterGroup"
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Field 'password' is not filterable"
