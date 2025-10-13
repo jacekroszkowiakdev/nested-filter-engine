@@ -18,7 +18,7 @@ export class UserController {
 
         if (!filterParam) {
           // No filter = return all results
-          const allUsers = await UserService.getAllUsers();
+          const allUsers = await UserService.filterUsers();
           return res.status(200).json(allUsers);
         }
 
@@ -36,7 +36,7 @@ export class UserController {
 
       // POST check if filters obj is empty
       if (Validator.isFiltersObjEmpty(filters)) {
-        const allUsers = await UserService.getAllUsers();
+        const allUsers = await UserService.filterUsers();
         return res.status(200).json(allUsers);
       }
 
