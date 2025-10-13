@@ -12,6 +12,13 @@ export class Validator {
   // 2. Is the requested operator in the allowed operators array?
   // 3. Does the value match the field's type?
   validate(filter: FilterGroup | FilterCondition): void {
+    // check the structure of filter obj first
+    if (typeof filter !== "object" || Array.isArray(filter)) {
+      throw new Error(
+        "Invalid filter JSON structure - must be an object, not an array"
+      );
+    }
+
     if ("field" in filter && "operator" in filter) {
       this.validateCondition(filter);
     } else {
@@ -69,7 +76,6 @@ export class Validator {
         });
         break;
 
-
       // is_null and is_not_null must not have a value
       case "is_null":
       case "is_not_null":
@@ -86,6 +92,13 @@ export class Validator {
           this.validateEnumValue(fieldDef, value, field);
         }
     }
+  }
+
+  static isFiltersObjEmpty(
+    filters: FilterGroup | FilterCondition | null | undefined
+  ): boolean {
+    if (!filters || Object.keys(filters).length === 0) return true;
+    return false;
   }
 
   private validateType(fieldDef: FieldDefinition, value: any, field: string) {
@@ -125,14 +138,18 @@ export class Validator {
     }
   }
 
-  private validateEnumValue(fieldDef: FieldDefinition, value: any, field: string): void {
+  private validateEnumValue(
+    fieldDef: FieldDefinition,
+    value: any,
+    field: string
+  ): void {
     if (!fieldDef.enumValues || value === null || value === undefined) return;
 
     // If the field has enumValues (like role having ['USER', 'ADMIN', 'MODERATOR']), check if the provided value is in that list
     if (!fieldDef.enumValues.includes(value)) {
       throw new Error(
         `Invalid value '${value}' for field '${field}'. ` +
-        `Allowed values: ${fieldDef.enumValues.join(', ')}`
+          `Allowed values: ${fieldDef.enumValues.join(", ")}`
       );
     }
   }
