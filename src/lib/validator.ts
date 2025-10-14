@@ -8,9 +8,10 @@ export class Validator {
   }
 
   // When a filter request comes in, the Validator uses this schema to check
-  // 1. Does schema[fieldName] exist? If not, the field isn't filterable
-  // 2. Is the requested operator in the allowed operators array?
-  // 3. Does the value match the field's type?
+  // 1. Check the structure of filter obj first
+  // 2. Does schema[fieldName] exist? If not, the field isn't filterable
+  // 3. Is the requested operator in the allowed operators array?
+  // 4. Does the value match the field's type?
   validate(filter: FilterGroup | FilterCondition): void {
     // check the structure of filter obj first
     if (typeof filter !== "object" || Array.isArray(filter)) {

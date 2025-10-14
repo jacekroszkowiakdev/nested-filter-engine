@@ -601,7 +601,7 @@ Audit fields (`createdAt`, `updatedAt`, `joinDate`) are intentionally not decora
 - [ ] E2E tests
 - [ ] Query result pagination
 - [ ] Filter result caching
-- [ ] OpenAPI documentation
+- [x] OpenAPI documentation
 
 ## License
 
